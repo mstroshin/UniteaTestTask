@@ -11,7 +11,7 @@ import SwiftUI
 struct UniteaTestProjectApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainView(viewModel: MainViewModel(apiService: iTunesAPIServiceImpl()))
         }
     }
 }
