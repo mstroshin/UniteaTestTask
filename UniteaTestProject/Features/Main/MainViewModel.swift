@@ -14,7 +14,6 @@ final class MainViewModel: ObservableObject {
     private let fetchingCount: UInt = 50
     private var currentOffset: UInt = 0
     private var hasMoreSongs = true
-    private var cancellables = Set<AnyCancellable>()
 
     init(apiService: iTunesAPIService) {
         self.apiService = apiService
