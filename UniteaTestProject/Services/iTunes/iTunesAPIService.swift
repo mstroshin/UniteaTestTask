@@ -1,14 +1,15 @@
 import Foundation
+import Combine
 
 protocol iTunesAPIService {
-    func fetchSongs(for query: String, offset: UInt, count: UInt) async throws -> iTunesResponseModel
+    func fetchSongs(for query: String, offset: UInt, count: UInt) -> AnyPublisher<iTunesResponseModel, Error>
 }
 
 final class iTunesAPIServiceImpl: iTunesAPIService {
     private let session = URLSession.shared
     private let decoder = JSONDecoder()
 
-    func fetchSongs(for query: String, offset: UInt, count: UInt) async throws -> iTunesResponseModel {
+    func fetchSongs(for query: String, offset: UInt, count: UInt) -> AnyPublisher<iTunesResponseModel, Error> {
         let baseURL = URL(string: "https://itunes.apple.com/search")!
         let params = [
             URLQueryItem(name: "term", value: query),
@@ -18,10 +19,10 @@ final class iTunesAPIServiceImpl: iTunesAPIService {
         ]
         let endpoint = baseURL.appending(queryItems: params)
 
-        let urlRequest = URLRequest(url: endpoint)
-        let (responseData, _) = try await session.data(for: urlRequest)
-
-        return try decoder.decode(iTunesResponseModel.self, from: responseData)
+        return session.dataTaskPublisher(for: endpoint)
+            .map(\.data)
+            .decode(type: iTunesResponseModel.self, decoder: decoder)
+            .eraseToAnyPublisher()
     }
     
 }
@@ -48,8 +49,8 @@ final class iTunesAPIServiceMock: iTunesAPIService {
         )
     }()
 
-    func fetchSongs(for query: String, offset: UInt, count: UInt) async throws -> iTunesResponseModel {
-        Self.songsResponse
+    func fetchSongs(for query: String, offset: UInt, count: UInt) -> AnyPublisher<iTunesResponseModel, Error> {
+        Fail(error: NSError(domain: "", code: 1)).eraseToAnyPublisher()
     }
 
 }

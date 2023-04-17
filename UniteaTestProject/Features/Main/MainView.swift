@@ -19,8 +19,8 @@ struct MainView: View {
             .navigationTitle("iTunes Songs")
         }
         .searchable(text: $viewModel.queryText)
-        .task {
-            await viewModel.onAppear()
+        .onAppear {
+            viewModel.onAppear()
         }
     }
 
@@ -41,9 +41,7 @@ struct MainView: View {
                 } else {
                     Color.clear
                         .onAppear {
-                            Task {
-                                await viewModel.didReachBottom()
-                            }
+                            viewModel.didReachBottom()
                         }
                 }
             }
