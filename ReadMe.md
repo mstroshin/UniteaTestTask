@@ -3,5 +3,5 @@ iTunes, и отображение списком результата. (Отоб
 альбома и название песни). При тапе на песню проигрывать ее. Использовать 
 только SwiftUI и Combine. Архитектура mvvm.
 
-Main ветка: Combine + async/await
+Main ветка: Combine + async/await  
 full_combine ветка: только Combine
